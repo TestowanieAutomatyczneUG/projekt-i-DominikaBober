@@ -17,4 +17,4 @@ def print_table(table, top_text, left_text, bottom_text, right_text):
        new_table.append_row(sum([[left_text[i]], list(table[i]), [right_text[i]]],[]))
     new_table.append_row(sum([[""], bottom_text, [""]],[]))
 
-    print(new_table)
+    print(new_table,"\n")
