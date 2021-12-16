@@ -35,26 +35,32 @@ class Game:
     
     def get_game(self, difficulty): # difficulty is int from 1 to 5
 
-        difficulty_levels = {"1": 1, "2": 0.8, "3": 0.6, "4": 0.35, "5": 0.05}
+        difficulty_levels = {"1": 1, "2": 0.8, "3": 0.6, "4": 0.35, "5": 0.1}
 
         bars = {"plate": numpy.full((self.size, self.size), None), "top_text": self.top_text.copy(), "left_text": self.left_text.copy(),
                                 "bottom_text": self.bottom_text.copy(), "right_text": self.right_text.copy()}
 
-        temp = self.size*4-math.ceil(difficulty_levels[str(difficulty)]*self.size*4)
-        while temp>0:
+        temp = max(2,math.ceil(difficulty_levels[str(difficulty)]*self.size*4))
+        while temp<self.size*4:
             
             temp_index = random.choice(numpy.where(numpy.array(bars['top_text']) != None)[0])
             bars['top_text'][temp_index] = None
-            temp-=1
+            temp+=1
+            if temp>=self.size*4:
+                break
             temp_index = random.choice(numpy.where(numpy.array(bars['left_text']) != None)[0])
             bars['left_text'][temp_index] = None
-            temp-=1
+            temp+=1
+            if temp>=self.size*4:
+                break
             temp_index = random.choice(numpy.where(numpy.array(bars['bottom_text']) != None)[0])
             bars['bottom_text'][temp_index] = None
-            temp-=1
+            temp+=1
+            if temp>=self.size*4:
+                break
             temp_index = random.choice(numpy.where(numpy.array(bars['right_text']) != None)[0])
             bars['right_text'][temp_index] = None
-            temp-=1
+            temp+=1
         
         return bars
 
