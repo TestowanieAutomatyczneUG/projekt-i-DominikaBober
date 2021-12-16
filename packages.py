@@ -9,7 +9,8 @@ import itertools
 from beautifultable import BeautifulTable
 from itertools import permutations
 from collections import ChainMap
-from colorama import init, Fore, Back, Style
+from string import ascii_letters, digits
+from colorama import Fore, Style
 
 
 def unique(list):
