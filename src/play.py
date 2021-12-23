@@ -3,8 +3,7 @@ sys.path.append('./')
 from packages import *
 warnings.filterwarnings("ignore")
 
-from functions.print_table import print_table
-from all_games import AllGames
+from src.functions.print_table import print_table
 
 def filter_posible_results_for_game(plate, results):
 
@@ -31,9 +30,11 @@ class PlayGame:
 
         print(f"{Fore.GREEN}-----WELCOME TO THE GAME-----{Style.RESET_ALL}")
         game = input("If you want to start new game write \u001b[34mnew\u001b[0m. If you want to load game from save file write \u001b[34msave\u001b[0m.\n")
-        while game not in ["new", "save", "exit"]:
+        i = 1
+        while game not in ["new", "save", "exit"] and i<10:
             print("Unknown command.")
             game = input("If you want to start new game write \u001b[34mnew\u001b[0m. If you want to load game from save file write \u001b[34msave\u001b[0m.\n")
+            i+=1
 
         if game == "new":
 
@@ -54,6 +55,7 @@ class PlayGame:
 
             if tres==5:
                 print("Too many wrong values given. Game ends.")
+                self.is_game_on = False
             else:
                 with open(f'src/games/all_games_{self.size}.pickle', 'rb') as file:
                     all_games = pickle.load(file)

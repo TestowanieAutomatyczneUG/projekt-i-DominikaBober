@@ -1,8 +1,8 @@
 import sys
 sys.path.append('./')
 from packages import *
-from functions.print_table import print_table
-from functions.create_game_plate import create_game_plate
+from src.functions.print_table import print_table
+from src.functions.create_game_plate import create_game_plate
 
 def filter_function(game):
 
