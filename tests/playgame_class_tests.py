@@ -33,7 +33,8 @@ class PlayGameTest(unittest.TestCase):
     @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
     def test_new_game_add_through_module(self, mock_input):
         game = PlayGame()
-        game.put_value(1, 1, 3)
+        plate = game.put_value(1, 1, 3)
+        hamcrest.assert_that(plate[0][0], hamcrest.equal_to(3))
     
         # bad column
     @patch('builtins.input', side_effect=['new', '3', '3', 'add', 'bad_col', 'exit'])
@@ -103,13 +104,13 @@ class PlayGameTest(unittest.TestCase):
     @patch('builtins.input', side_effect=['save', 'test_save_1', 'exit'])
     # This game looks like this
     # +---+---+---+---+---+
-    # |   | 3 | 1 |   |   |
+    # |   |   | 1 | 2 |   |
     # +---+---+---+---+---+
-    # |   |   |   |   | 2 |
+    # | 2 |   | 3 |   | 2 |
     # +---+---+---+---+---+
-    # | 2 |   |   | 3 | 1 |
+    # |   |   |   |   |   |
     # +---+---+---+---+---+
-    # | 1 | 3 |   |   |   |
+    # | 1 | 3 |   |   | 3 |
     # +---+---+---+---+---+
     # |   |   | 2 | 2 |   |
     # +---+---+---+---+---+ 
@@ -117,33 +118,29 @@ class PlayGameTest(unittest.TestCase):
         game = PlayGame()
 
     # testing add
-    @patch('builtins.input', side_effect=['save', 'test_save_1', 'add', '2', '1', '3', 'exit'])
+    @patch('builtins.input', side_effect=['save', 'test_game_1', 'add', '2', '3', '3', 'exit'])
     def test_load_game_and_add(self, mock_input):
         game = PlayGame()
     
-    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
-    def test_load_game_add_through_module(self, mock_input):
+    if "test_game_2" in list(map(lambda save: save[:save.index(".pickle")], os.listdir("src/saves"))):
+        test_load_game_add_and_save_side_effect = ['save', 'test_game_1', 'add', '2', '3', '3', 'save', 'test_game_2', 'y', 'exit']
+    else:
+        test_load_game_add_and_save_side_effect = ['save', 'test_game_1', 'add', '2', '3', '3', 'save', 'test_game_2', 'exit']
+    @patch('builtins.input', side_effect=test_load_game_add_and_save_side_effect)
+    def test_load_game_add_and_save(self, mock_input):
         game = PlayGame()
-        plate = game.put_value(2, 1, 3)
-        hamcrest.assert_that(
-            list(map( lambda sub1, sub2: 
-            sum(list(map(lambda el1, el2:
-            True if (el1 is None and el2 is None) else el1==el2,
-            sub1, sub2))), 
-            plate,[[None, '3', None], [None, None, '3'], ['3', None, None]])),
-            hamcrest.is_(True))
     
     # testing undo
-    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo', 'exit'])
+    @patch('builtins.input', side_effect=['save', 'test_game_1', 'undo', 'exit'])
     def test_load_game_undo(self, mock_input):
         game = PlayGame()
     
     # testing undo move
-    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo move', '1', '3', 'exit'])
+    @patch('builtins.input', side_effect=['save', 'test_game_1', 'undo move', '1', '3', 'exit'])
     def test_load_game_undo_made_move(self, mock_input):
         game = PlayGame()
                 
-    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo move', '2', '2', 'exit'])
+    @patch('builtins.input', side_effect=['save', 'test_game_1', 'undo move', '2', '2', 'exit'])
     def test_load_game_undo_unmade_move(self, mock_input):
         game = PlayGame()
 
@@ -151,4 +148,3 @@ save_stdout = sys.stdout
 sys.stdout = open('trash', 'w')
 unittest.main()
 sys.stdout = save_stdout
-# print(list(itertools.chain(*list(map(lambda i: list(map(lambda j: (i, j), range(1,6))), range(1,4))))))
