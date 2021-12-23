@@ -6,6 +6,8 @@ import pickle
 import math
 import warnings
 import itertools
+import unittest
+from assertpy import *
 from beautifultable import BeautifulTable
 from itertools import permutations
 from collections import ChainMap
