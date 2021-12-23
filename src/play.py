@@ -181,7 +181,7 @@ class PlayGame:
                             self.handle_exit()
             else:
                 print("Wrong value")
-        except TypeError:
+        except IndexError:
             print("Wrong coordinates")
 
     
