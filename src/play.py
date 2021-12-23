@@ -3,8 +3,7 @@ sys.path.append('./')
 from packages import *
 warnings.filterwarnings("ignore")
 
-from functions.print_table import print_table
-from all_games import AllGames
+from src.functions.print_table import print_table
 
 def filter_posible_results_for_game(plate, results):
 
@@ -31,9 +30,11 @@ class PlayGame:
 
         print(f"{Fore.GREEN}-----WELCOME TO THE GAME-----{Style.RESET_ALL}")
         game = input("If you want to start new game write \u001b[34mnew\u001b[0m. If you want to load game from save file write \u001b[34msave\u001b[0m.\n")
-        while game not in ["new", "save", "exit"]:
+        i = 1
+        while game not in ["new", "save", "exit"] and i<10:
             print("Unknown command.")
             game = input("If you want to start new game write \u001b[34mnew\u001b[0m. If you want to load game from save file write \u001b[34msave\u001b[0m.\n")
+            i+=1
 
         if game == "new":
 
@@ -50,10 +51,11 @@ class PlayGame:
                     good_to_go = True
                 except ValueError:
                     tres+=1
-                    print("Wrong values")
+                    print(f"{Fore.RED}Wrong values{Style.RESET_ALL}")
 
             if tres==5:
                 print("Too many wrong values given. Game ends.")
+                self.is_game_on = False
             else:
                 with open(f'src/games/all_games_{self.size}.pickle', 'rb') as file:
                     all_games = pickle.load(file)
@@ -91,11 +93,17 @@ class PlayGame:
         def handle_add():
             try:
                 col = int(input("To which column? \n"))
+                if col<1 or col>self.size:
+                    raise ValueError
                 row = int(input("To which row? \n"))
+                if row<1 or row>self.size:
+                    raise ValueError
                 value = int(input("What value? \n"))
+                if value<1 or value>self.size:
+                    raise ValueError
                 self.put_value(col, row, value)
             except ValueError:
-                print("Wrong value type")
+                print(f"{Fore.RED}Wrong value{Style.RESET_ALL}")
         
         def handle_undo():
             self.undo()
@@ -106,7 +114,7 @@ class PlayGame:
                 row = int(input("Which row? \n"))
                 self.undo_move(row, col)
             except ValueError:
-                print("Wrong value type")
+                print(f"{Fore.RED}Wrong value type{Style.RESET_ALL}")
             
         def handle_help():
             print(self.help)
@@ -219,12 +227,17 @@ class PlayGame:
                 |\t\t /__\ \t\t\t /\ 		|
                 /\ \t\t/____\ \t\t/\ \t/__\		/\ \n''')
         print("Person on the left sees one pyramid. Person on the rigth sees two pyramids. From these informations we can tell heights of the pyramids. In the table it would look like this:\n")
-        print(BeautifulTable().append_row([f"{Fore.MAGENTA}1{Style.RESET_ALL}", 3, 1, 2, f"{Fore.MAGENTA}2{Style.RESET_ALL}"]),"\n")
-        print("Now lest see solution for this game 3x3")
+        row = BeautifulTable()
+        row.append_row([f"{Fore.MAGENTA}1{Style.RESET_ALL}", 3, 1, 2, f"{Fore.MAGENTA}2{Style.RESET_ALL}"])
+        print(row,"\n")
+        print("Now lets see solution for this game 3x3")
         print_table(numpy.full((3, 3), None), [3, 1, None], [2, None, 1], [1, 2, None], [2, None, 3])
         print("--SOLUTION--")
         print_table([[1, 3, 2], [2, 1, 3], [3, 2, 1]], [3, 1, None], [2, None, 1], [1, 2, None], [2, None, 3])
         print("Hope it helps!")
+
+        print("Back to your game...")
+        print_table(self.plate, self.top_text, self.left_text, self.bottom_text, self.right_text)
     
         
 
