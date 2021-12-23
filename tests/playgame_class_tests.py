@@ -125,7 +125,13 @@ class PlayGameTest(unittest.TestCase):
     def test_load_game_add_through_module(self, mock_input):
         game = PlayGame()
         plate = game.put_value(2, 1, 3)
-        hamcrest.assert_that(str(plate), hamcrest.equal_to(str([[None, '3', None], [None, None, '3'], ['3', None, None]])))
+        hamcrest.assert_that(
+            list(map( lambda sub1, sub2: 
+            sum(list(map(lambda el1, el2:
+            True if (el1 is None and el2 is None) else el1==el2,
+            sub1, sub2))), 
+            plate,[[None, '3', None], [None, None, '3'], ['3', None, None]])),
+            hamcrest.is_(True))
     
     # testing undo
     @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo', 'exit'])

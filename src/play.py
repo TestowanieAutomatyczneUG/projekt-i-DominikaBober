@@ -157,7 +157,7 @@ class PlayGame:
     def put_value(self, col, row, value):            
         try:
             if value is None or (type(value) is int and 1<=value<=self.size):
-                self.plate[row-1, col-1] = value
+                self.plate[row-1, col-1] = str(value)
                 self.last_move = (row, col)
                 self.posible_results_ids = filter_posible_results_for_game(self.plate, self.posible_results)
                 if len(self.posible_results_ids)==0:
@@ -165,6 +165,7 @@ class PlayGame:
                     temp_plate[row-1, col-1] = f"{Fore.RED}{value}{Style.RESET_ALL}"
                     print_table(temp_plate, self.top_text, self.left_text, self.bottom_text, self.right_text)
                     print("Your last move was wrong")
+                    return self.plate
                 else:
                     print_table(self.plate, self.top_text, self.left_text, self.bottom_text, self.right_text)
                     if len(list(filter(None,list(itertools.chain(*self.plate)))))==self.size**2:
@@ -179,6 +180,7 @@ class PlayGame:
                         else:
                             print("Don't know what did you mean, but...")
                             self.handle_exit()
+                    return self.plate
             else:
                 print("Wrong value")
         except IndexError:
