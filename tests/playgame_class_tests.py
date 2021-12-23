@@ -2,16 +2,147 @@ import sys
 sys.path.append('./')
 from packages import *
 from unittest.mock import patch
+warnings.filterwarnings("ignore")
 
 from src.play import PlayGame
 
-class PlayTest(unittest.TestCase):
+class PlayGameTest(unittest.TestCase):
 
+    @patch('builtins.input', side_effect=['exit'])
+    def test_start_game_by_exit(self, mock_input):
+        game = PlayGame()
 
-    @patch('builtins.input', side_effect=['new', 3, 3, 'exit'])
-    # @patch('builtins.input', return_value='new')
-    def test_sum_string_of_ints(self, mock_input):
-        PlayGame()
+# new game
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_new_game_and_exit(self, mock_input):
+        game = PlayGame()
 
+    @patch('builtins.input', side_effect=['new', '6', '5', '6', '5', '9', 'exit'])
+    def test_new_game_bad_size(self, mock_input):
+        game = PlayGame()
 
+    @patch('builtins.input', side_effect=['new', '3', '6', '3', '5', '3', '6', '3', '5', '3', '9', 'exit'])
+    def test_new_game_bad_difficulty(self, mock_input):
+        game = PlayGame()
+
+    # testing add
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '1', '1', '3', 'exit'])
+    def test_new_game_add_through_input(self, mock_input):
+        game = PlayGame()
+    
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_new_game_add_through_module(self, mock_input):
+        game = PlayGame()
+        game.put_value(1, 1, 3)
+    
+        # bad column
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', 'bad_col', 'exit'])
+    def test_new_game_add_bad_col_str(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '0', 'exit'])
+    def test_new_game_add_bad_col_lower_int(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '4', 'exit'])
+    def test_new_game_add_bad_col_upper_int(self, mock_input):
+        game = PlayGame()
+    
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_new_game_add_bad_col_through_module(self, mock_input):
+        game = PlayGame()
+        game.put_value(5, 1, 3)
+    
+        # bad row
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', 'bad_row', 'exit'])
+    def test_new_game_add_bad_row_str(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '0', 'exit'])
+    def test_new_game_add_bad_row_lower_int(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '4', 'exit'])
+    def test_new_game_add_bad_row_upper_int(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_new_game_add_bad_row_through_module(self, mock_input):
+        game = PlayGame()
+        game.put_value(1, 5, 3)
+          
+        # bad value
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '2', 'bad_value', 'exit'])
+    def test_new_game_add_bad_value_str(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '2', '0', 'exit'])
+    def test_new_game_add_bad_value_lower_int(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '2', '4', 'exit'])
+    def test_new_game_add_bad_value_upper_int(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_new_game_add_bad_value_through_module(self, mock_input):
+        game = PlayGame()
+        game.put_value(1, 1, 5)
+          
+    # testing undo
+    @patch('builtins.input', side_effect=['new', '3', '3', 'undo', 'exit'])
+    def test_new_game_undo_before_move(self, mock_input):
+        game = PlayGame()
+
+    @patch('builtins.input', side_effect=['new', '3', '3', 'add', '2', '2', '2', 'undo', 'exit'])
+    def test_new_game_undo_after_add(self, mock_input):
+        game = PlayGame()
+        
+
+# load game
+    @patch('builtins.input', side_effect=['save', 'test_save_1', 'exit'])
+    # This game looks like this
+    # +---+---+---+---+---+
+    # |   | 3 | 1 |   |   |
+    # +---+---+---+---+---+
+    # |   |   |   |   | 2 |
+    # +---+---+---+---+---+
+    # | 2 |   |   | 3 | 1 |
+    # +---+---+---+---+---+
+    # | 1 | 3 |   |   |   |
+    # +---+---+---+---+---+
+    # |   |   | 2 | 2 |   |
+    # +---+---+---+---+---+ 
+    def test_load_game_and_exit(self, mock_input):
+        game = PlayGame()
+
+    # testing add
+    @patch('builtins.input', side_effect=['save', 'test_save_1', 'add', '2', '1', '3', 'exit'])
+    def test_load_game_and_add(self, mock_input):
+        game = PlayGame()
+    
+    @patch('builtins.input', side_effect=['new', '3', '3', 'exit'])
+    def test_load_game_add_through_module(self, mock_input):
+        game = PlayGame()
+        plate = game.put_value(2, 1, 3)
+        hamcrest.assert_that(str(plate), hamcrest.equal_to(str([[None, '3', None], [None, None, '3'], ['3', None, None]])))
+    
+    # testing undo
+    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo', 'exit'])
+    def test_load_game_undo(self, mock_input):
+        game = PlayGame()
+    
+    # testing undo move
+    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo move', '1', '3', 'exit'])
+    def test_load_game_undo_made_move(self, mock_input):
+        game = PlayGame()
+                
+    @patch('builtins.input', side_effect=['save', 'test_save_1', 'undo move', '2', '2', 'exit'])
+    def test_load_game_undo_unmade_move(self, mock_input):
+        game = PlayGame()
+
+save_stdout = sys.stdout
+sys.stdout = open('trash', 'w')
 unittest.main()
+sys.stdout = save_stdout
+# print(list(itertools.chain(*list(map(lambda i: list(map(lambda j: (i, j), range(1,6))), range(1,4))))))
